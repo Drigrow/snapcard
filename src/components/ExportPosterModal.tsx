@@ -79,12 +79,12 @@ export const ExportPosterModal: React.FC<ExportPosterModalProps> = ({
         </div>
 
         {/* Poster Preview Container (Scrollable) */}
-        <div className="flex-1 overflow-y-auto p-1 sm:p-2 flex justify-center bg-slate-950/40 rounded-xl sm:rounded-2xl border border-slate-800/60 my-1 sm:my-2">
+        <div className="flex-1 overflow-y-auto p-1.5 sm:p-3 flex justify-center bg-slate-950/60 rounded-xl border border-slate-800/60 my-1 sm:my-2">
           
-          {/* Target Capture Area */}
+          {/* Target Capture Area (Clean Rectangular Poster, No Rounded Outer Corners) */}
           <div
             ref={posterRef}
-            className="w-full max-w-[420px] bg-gradient-to-b from-slate-900 via-[#0b1120] to-[#080d1a] text-slate-100 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-800 relative flex flex-col justify-between"
+            className="w-full max-w-[440px] bg-gradient-to-b from-slate-900 via-[#0b1120] to-[#080d1a] text-slate-100 p-5 sm:p-7 rounded-none shadow-none border-0 relative flex flex-col justify-between"
           >
             {/* Top Branding & Audience Pill */}
             <div>
