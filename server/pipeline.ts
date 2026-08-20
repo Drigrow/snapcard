@@ -278,33 +278,54 @@ JSON Output Schema:
       }
     }
 
-    // Preprocess markdown content
+    // Preprocess markdown content (normalize fullwidth, bracket bolding, and whitespace)
     let rawContent = cardData.content || '';
     rawContent = rawContent
       .replace(/＊＊/g, '**')
       .replace(/～～/g, '~~')
       .replace(/｀｀｀/g, '```')
-      .replace(/｀/g, '`')
-      .replace(/([：:])\s*-(?=[^\s\d])/g, '$1\n- ')
-      .replace(/([。；])\s*-([^\s\d])/g, '$1\n- $2')
-      .replace(/(^|\n)[ \t]*[•·⁃][ \t]+/g, '$1- ');
+      .replace(/｀/g, '`');
 
-    // Normalize code block splitting
-    const parts = rawContent.split(/(```[\s\S]*?```)/g);
-    rawContent = parts
-      .map((part, index) => {
-        if (index % 2 === 1) return part;
-        let p = part;
-        // Trim inner whitespace within ** ... ** on the same line
-        p = p.replace(/\*\*([^\n*]+?)\*\*/g, (match, inner) => {
-          const trimmed = inner.trim();
-          if (!trimmed) return '';
-          return `**${trimmed}**`;
+    const codeParts = rawContent.split(/(```[\s\S]*?```)/g);
+    rawContent = codeParts
+      .map((codePart, codeIdx) => {
+        if (codeIdx % 2 === 1) return codePart;
+
+        const lines = codePart.split('\n');
+        const processedLines = lines.map((line) => {
+          if (!line.includes('**')) return line;
+
+          const parts = line.split('**');
+          if (parts.length % 2 === 1 && parts.length > 2) {
+            for (let i = 1; i < parts.length; i += 2) {
+              let inner = parts[i];
+
+              const bracketMatch = inner.match(/^([「“《（【(‘'"])([\s\S]+?)([」”》）】)’'"])$/);
+              if (bracketMatch) {
+                parts[i - 1] += bracketMatch[1];
+                parts[i + 1] = bracketMatch[3] + parts[i + 1];
+                inner = bracketMatch[2];
+              }
+
+              inner = inner.trim();
+
+              if (parts[i - 1] && /[^\s|>`#*_\-\d[(]/.test(parts[i - 1].slice(-1))) {
+                parts[i - 1] += ' ';
+              }
+              if (parts[i + 1] && /[^\s|>`#*_\-\d)\]]/.test(parts[i + 1].slice(0, 1))) {
+                parts[i + 1] = ' ' + parts[i + 1];
+              }
+
+              parts[i] = inner;
+            }
+
+            return parts.join('**');
+          }
+
+          return line;
         });
-        // Ensure bold markers have boundary spaces
-        p = p.replace(/([^\s*`_#>\-\d([])(\*\*[^\n*]+?\*\*)/g, '$1 $2');
-        p = p.replace(/(\*\*[^\n*]+?\*\*)([^\s*`_#<:\d])/g, '$1 $2');
-        return p;
+
+        return processedLines.join('\n');
       })
       .join('');
 

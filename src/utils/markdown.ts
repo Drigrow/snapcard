@@ -1,6 +1,6 @@
 /**
  * Preprocess Markdown text to fix CommonMark CJK flanking delimiter issues,
- * multi-line bold spans, bullet symbols, fullwidth punctuation, and LLM spacing anomalies within **.
+ * multi-word bold spans, and quotes/brackets wrapping without breaking tables or lists.
  */
 export function preprocessMarkdown(text: string): string {
   if (!text) return '';
@@ -12,36 +12,57 @@ export function preprocessMarkdown(text: string): string {
     .replace(/｀｀｀/g, '```')
     .replace(/｀/g, '`');
 
-  // 2. Fix inline dashed sub-items like "（RNP）： -PAM 识别... -R-loop 形成..." -> separate lines
-  content = content.replace(/([：:])\s*-(?=[^\s\d])/g, '$1\n- ');
-  content = content.replace(/([。；])\s*-([^\s\d])/g, '$1\n- $2');
+  // Split by code blocks ``` ... ``` to protect code
+  const codeParts = content.split(/(```[\s\S]*?```)/g);
 
-  // 3. Convert raw bullet points (•, ·, ⁃) at line starts to standard markdown '- '
-  content = content.replace(/(^|\n)[ \t]*[•·⁃][ \t]+/g, '$1- ');
+  return codeParts
+    .map((codePart, codeIdx) => {
+      if (codeIdx % 2 === 1) return codePart;
 
-  // Split by code blocks ``` ... ``` to protect raw code snippets
-  const parts = content.split(/(```[\s\S]*?```)/g);
+      // Process line by line so bold spans don't accidentally leak across lines
+      const lines = codePart.split('\n');
 
-  return parts
-    .map((part, index) => {
-      // If code block part, leave untouched
-      if (index % 2 === 1) return part;
+      const processedLines = lines.map((line) => {
+        if (!line.includes('**')) return line;
 
-      let p = part;
+        const parts = line.split('**');
+        // If odd number of parts (i.e. even number of **), we have matched pairs of **
+        if (parts.length % 2 === 1 && parts.length > 2) {
+          for (let i = 1; i < parts.length; i += 2) {
+            let inner = parts[i];
 
-      // 4. Trim inner whitespace within ** ... ** on the same line
-      // Handles multi-word phrases like "** 基因敲除 (Knockout) **", "**（单向导 RNA）与Cas9 核酸内切酶**"
-      p = p.replace(/\*\*([^\n*]+?)\*\*/g, (match, inner) => {
-        const trimmed = inner.trim();
-        if (!trimmed) return '';
-        return `**${trimmed}**`;
+            // A. Move brackets/quotes outside if wrapped inside **
+            // e.g. **「单向陷阱」** -> 「**单向陷阱**」, **“桌球”** -> “**桌球**”
+            const bracketMatch = inner.match(/^([「“《（【(‘'"])([\s\S]+?)([」”》）】)’'"])$/);
+            if (bracketMatch) {
+              parts[i - 1] += bracketMatch[1];
+              parts[i + 1] = bracketMatch[3] + parts[i + 1];
+              inner = bracketMatch[2];
+            }
+
+            // B. Trim inner whitespace within ** ... **
+            inner = inner.trim();
+
+            // C. CommonMark flanking boundary spacing:
+            // Ensure space before opening ** if preceded by non-space/non-delimiter
+            if (parts[i - 1] && /[^\s|>`#*_\-\d[(]/.test(parts[i - 1].slice(-1))) {
+              parts[i - 1] += ' ';
+            }
+            // Ensure space after closing ** if followed by non-space/non-delimiter
+            if (parts[i + 1] && /[^\s|>`#*_\-\d)\]]/.test(parts[i + 1].slice(0, 1))) {
+              parts[i + 1] = ' ' + parts[i + 1];
+            }
+
+            parts[i] = inner;
+          }
+
+          return parts.join('**');
+        }
+
+        return line;
       });
 
-      // 5. Ensure bold markers have boundary spaces before and after
-      p = p.replace(/([^\s*`_#>\-\d([])(\*\*[^\n*]+?\*\*)/g, '$1 $2');
-      p = p.replace(/(\*\*[^\n*]+?\*\*)([^\s*`_#<:\d])/g, '$1 $2');
-
-      return p;
+      return processedLines.join('\n');
     })
     .join('');
 }
