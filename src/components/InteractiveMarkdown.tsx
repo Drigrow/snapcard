@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import { HelpCircle, MessageSquare, Copy, Check, X, Sparkles } from 'lucide-react';
 import { getTranslation, Language } from '../utils/i18n';
 
@@ -17,6 +19,15 @@ interface ActivePopover {
   y: number;
   rect: DOMRect;
 }
+
+const extractText = (node: React.ReactNode): string => {
+  if (typeof node === 'string' || typeof node === 'number') return String(node);
+  if (Array.isArray(node)) return node.map(extractText).join('');
+  if (React.isValidElement(node) && node.props && (node.props as any).children) {
+    return extractText((node.props as any).children);
+  }
+  return '';
+};
 
 export const InteractiveMarkdown: React.FC<InteractiveMarkdownProps> = ({
   content,
@@ -54,11 +65,11 @@ export const InteractiveMarkdown: React.FC<InteractiveMarkdownProps> = ({
     };
   }, [activePopover]);
 
-  const handleTermClick = (e: React.MouseEvent<HTMLElement>, termText: string) => {
+  const handleTermClick = (e: React.MouseEvent<HTMLElement>, rawText: string) => {
     e.stopPropagation();
     e.preventDefault();
 
-    const cleanTerm = termText.trim().replace(/^[*_`#]+|[*_`#]+$/g, '');
+    const cleanTerm = rawText.trim().replace(/^[*_`#:]+|[*_`#:]+$/g, '');
     if (!cleanTerm) return;
 
     const rect = e.currentTarget.getBoundingClientRect();
@@ -88,19 +99,17 @@ export const InteractiveMarkdown: React.FC<InteractiveMarkdownProps> = ({
   return (
     <div className={`relative ${className}`}>
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={[remarkGfm, remarkMath]}
+        rehypePlugins={[rehypeKatex]}
         components={{
           strong: ({ node, children, ...props }) => {
-            // Extract string representation
-            const termText = React.Children.toArray(children)
-              .map((c) => (typeof c === 'string' ? c : ''))
-              .join('');
+            const termText = extractText(children);
 
             return (
               <strong
                 {...props}
                 onClick={(e) => handleTermClick(e, termText)}
-                className="inline-flex items-center gap-0.5 cursor-pointer font-bold text-sky-600 dark:text-sky-400 bg-sky-500/10 dark:bg-sky-400/10 hover:bg-sky-500/20 dark:hover:bg-sky-400/25 px-1.5 py-0.5 rounded-md border border-sky-500/20 dark:border-sky-400/30 transition-all duration-150 group"
+                className="inline-flex items-center gap-1 cursor-pointer font-bold text-sky-600 dark:text-sky-400 bg-sky-500/10 dark:bg-sky-400/10 hover:bg-sky-500/20 dark:hover:bg-sky-400/25 px-1.5 py-0.5 rounded-md border border-sky-500/20 dark:border-sky-400/30 transition-all duration-150 group align-baseline"
                 title={lang === 'zh' ? `点击查询术语「${termText}」释义` : `Click to ask what "${termText}" means`}
               >
                 <span>{children}</span>

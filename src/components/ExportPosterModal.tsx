@@ -3,6 +3,8 @@ import { toPng } from 'html-to-image';
 import { X, Download, Sparkles, Check } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import { CardRecord } from '../types';
 import { getTranslation, Language } from '../utils/i18n';
 
@@ -125,7 +127,7 @@ export const ExportPosterModal: React.FC<ExportPosterModalProps> = ({
 
               {/* Markdown summary */}
               <div className="markdown-body text-xs text-slate-300 leading-relaxed mb-4">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>
                   {card.content.slice(0, 750) + (card.content.length > 750 ? '...' : '')}
                 </ReactMarkdown>
               </div>
