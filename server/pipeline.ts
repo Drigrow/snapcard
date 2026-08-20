@@ -309,10 +309,10 @@ JSON Output Schema:
 
               inner = inner.trim();
 
-              if (parts[i - 1] && /[^\s|>`#*_\-\d[(]/.test(parts[i - 1].slice(-1))) {
+              if (parts[i - 1] && /[^\s|>`#*_\-\d[(「“《（【‘'"]/.test(parts[i - 1].slice(-1))) {
                 parts[i - 1] += ' ';
               }
-              if (parts[i + 1] && /[^\s|>`#*_\-\d)\]]/.test(parts[i + 1].slice(0, 1))) {
+              if (parts[i + 1] && /[^\s|>`#*_\-\d)\]」”》）】’'"]/.test(parts[i + 1].slice(0, 1))) {
                 parts[i + 1] = ' ' + parts[i + 1];
               }
 

@@ -44,12 +44,12 @@ export function preprocessMarkdown(text: string): string {
             inner = inner.trim();
 
             // C. CommonMark flanking boundary spacing:
-            // Ensure space before opening ** if preceded by non-space/non-delimiter
-            if (parts[i - 1] && /[^\s|>`#*_\-\d[(]/.test(parts[i - 1].slice(-1))) {
+            // Ensure space before opening ** if preceded by non-space/non-delimiter/non-opening-bracket
+            if (parts[i - 1] && /[^\s|>`#*_\-\d[(「“《（【‘'"]/.test(parts[i - 1].slice(-1))) {
               parts[i - 1] += ' ';
             }
-            // Ensure space after closing ** if followed by non-space/non-delimiter
-            if (parts[i + 1] && /[^\s|>`#*_\-\d)\]]/.test(parts[i + 1].slice(0, 1))) {
+            // Ensure space after closing ** if followed by non-space/non-delimiter/non-closing-bracket
+            if (parts[i + 1] && /[^\s|>`#*_\-\d)\]」”》）】’'"]/.test(parts[i + 1].slice(0, 1))) {
               parts[i + 1] = ' ' + parts[i + 1];
             }
 

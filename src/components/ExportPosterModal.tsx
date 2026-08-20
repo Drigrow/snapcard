@@ -126,10 +126,10 @@ export const ExportPosterModal: React.FC<ExportPosterModalProps> = ({
                 </div>
               )}
 
-              {/* Markdown summary with CJK boundary & delimiter preprocessor */}
-              <div className="markdown-body text-xs text-slate-300 leading-relaxed mb-3 sm:mb-4 break-words overflow-hidden">
+              {/* Full Markdown body with CJK boundary & delimiter preprocessor */}
+              <div className="markdown-body text-xs text-slate-300 leading-relaxed mb-3 sm:mb-4 break-words">
                 <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>
-                  {preprocessMarkdown(card.content.slice(0, 750) + (card.content.length > 750 ? '...' : ''))}
+                  {preprocessMarkdown(card.content)}
                 </ReactMarkdown>
               </div>
 
