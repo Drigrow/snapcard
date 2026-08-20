@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  snapcard:
+    build: .
+    container_name: snapcard-app
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_MODEL=google/gemini-3.7-flash
+      - OPENROUTER_IMAGE_MODEL=google/gemini-3.1-flash-lite-image
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
+      - JWT_SECRET=${JWT_SECRET:-snapcard-production-auth-key-2026}
+      - ADMIN_USER=${ADMIN_USER:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+    volumes:
+      - ./data:/app/data
+      - ./uploads:/app/uploads
