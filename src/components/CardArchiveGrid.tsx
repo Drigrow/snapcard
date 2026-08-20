@@ -48,14 +48,14 @@ export const CardArchiveGrid: React.FC<CardArchiveGridProps> = ({
   }, [search, selectedAudience, favoriteOnly, refreshTrigger]);
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-6">
+    <div className="w-full max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
       
       {/* Top Header & Search Bar */}
-      <div className="glass-panel rounded-2xl p-4 sm:p-5 mb-6 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="glass-panel rounded-2xl p-3.5 sm:p-5 mb-4 sm:mb-6 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4">
         
         {/* Search Input */}
         <div className="relative w-full md:w-80">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 sm:top-3" />
           <input
             type="text"
             value={search}
@@ -66,7 +66,7 @@ export const CardArchiveGrid: React.FC<CardArchiveGridProps> = ({
         </div>
 
         {/* Filter Pills */}
-        <div className="flex flex-wrap items-center gap-2 text-xs">
+        <div className="flex flex-wrap items-center justify-between sm:justify-start gap-2 text-xs">
           {/* Favorite Toggle */}
           <button
             onClick={() => setFavoriteOnly(!favoriteOnly)}
@@ -136,28 +136,28 @@ export const CardArchiveGrid: React.FC<CardArchiveGridProps> = ({
           <div className="w-8 h-8 border-2 border-brand-500/30 border-t-brand-500 rounded-full animate-spin" />
         </div>
       ) : cards.length === 0 ? (
-        <div className="text-center py-20 glass-panel rounded-3xl p-8 border border-slate-200 dark:border-slate-800">
-          <BookOpen className="w-12 h-12 text-slate-400 mx-auto mb-3 opacity-50" />
-          <p className="text-slate-500 dark:text-slate-400 text-sm max-w-md mx-auto">
+        <div className="text-center py-16 sm:py-20 glass-panel rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800">
+          <BookOpen className="w-10 h-10 sm:w-12 sm:h-12 text-slate-400 mx-auto mb-3 opacity-50" />
+          <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm max-w-md mx-auto">
             {t.noCardsFound}
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5">
           {cards.map((c) => (
             <div
               key={c.id}
               onClick={() => onSelectCard(c)}
-              className="glass-panel rounded-2xl p-5 border border-slate-200/80 dark:border-slate-800/80 hover:border-brand-500/40 dark:hover:border-brand-500/40 shadow-sm hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between"
+              className="glass-panel rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800/80 hover:border-brand-500/40 dark:hover:border-brand-500/40 shadow-sm hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between"
             >
               <div>
                 {/* Image thumb if any */}
                 {c.images && c.images[0] && (
-                  <div className="mb-3 rounded-xl overflow-hidden aspect-video bg-slate-900 border border-slate-200 dark:border-slate-800">
+                  <div className="mb-3 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center p-1 aspect-video">
                     <img
                       src={c.images[0].url}
                       alt={c.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 rounded-lg"
                       loading="lazy"
                     />
                   </div>

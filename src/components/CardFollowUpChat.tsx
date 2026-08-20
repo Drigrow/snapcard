@@ -112,37 +112,37 @@ export const CardFollowUpChat: React.FC<CardFollowUpChatProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-      <div className="glass-panel w-full max-w-2xl h-[85vh] rounded-3xl flex flex-col shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-0 sm:p-4 animate-fade-in">
+      <div className="glass-panel w-full h-full sm:h-[85vh] sm:max-w-2xl rounded-none sm:rounded-3xl flex flex-col shadow-2xl border-0 sm:border border-slate-200 dark:border-slate-800 overflow-hidden">
         
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/50">
+        <div className="p-3.5 sm:p-5 border-b border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between bg-slate-50/80 dark:bg-slate-900/80">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center">
-              <Sparkles className="w-5 h-5" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
               <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
                 {t.followUpTitle}
               </h3>
-              <p className="text-xs text-slate-500 truncate max-w-xs sm:max-w-md">
+              <p className="text-[11px] sm:text-xs text-slate-500 truncate max-w-[200px] sm:max-w-md">
                 {card.title} ({card.audience})
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-colors"
+            className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Message feed */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+        <div className="flex-1 overflow-y-auto p-3.5 sm:p-6 space-y-3.5 sm:space-y-4">
           
           {/* Card Context Preview */}
-          <div className="p-3.5 rounded-2xl bg-brand-500/5 border border-brand-500/15 text-xs text-slate-600 dark:text-slate-400">
+          <div className="p-3 rounded-xl sm:rounded-2xl bg-brand-500/5 border border-brand-500/15 text-xs text-slate-600 dark:text-slate-400">
             <span className="font-semibold text-brand-600 dark:text-brand-400">{t.followUpContextLabel}</span>
             {card.oneLiner || card.title}
           </div>
@@ -156,23 +156,23 @@ export const CardFollowUpChat: React.FC<CardFollowUpChatProps> = ({
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex gap-2 sm:gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {msg.role === 'assistant' && (
-                <div className="w-7 h-7 rounded-lg bg-brand-500 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold mt-1">
-                  <Bot className="w-4 h-4" />
+                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-500 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold mt-1">
+                  <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
               )}
 
               <div
-                className={`max-w-[85%] rounded-2xl px-4 py-3 text-xs sm:text-sm ${
+                className={`max-w-[90%] sm:max-w-[85%] rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-sm ${
                   msg.role === 'user'
                     ? 'bg-brand-600 text-white rounded-br-none'
                     : 'glass-panel text-slate-800 dark:text-slate-200 rounded-bl-none shadow-sm'
                 }`}
               >
                 {msg.role === 'assistant' ? (
-                  <div className="markdown-body">
+                  <div className="markdown-body overflow-hidden break-words">
                     <InteractiveMarkdown
                       content={msg.content}
                       lang={lang}
@@ -180,24 +180,24 @@ export const CardFollowUpChat: React.FC<CardFollowUpChatProps> = ({
                     />
                   </div>
                 ) : (
-                  <p className="whitespace-pre-wrap">{msg.content}</p>
+                  <p className="whitespace-pre-wrap break-words">{msg.content}</p>
                 )}
               </div>
 
               {msg.role === 'user' && (
-                <div className="w-7 h-7 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center flex-shrink-0 text-xs font-bold mt-1">
-                  <User className="w-4 h-4" />
+                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center flex-shrink-0 text-xs font-bold mt-1">
+                  <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
               )}
             </div>
           ))}
 
           {isLoading && (
-            <div className="flex gap-3 justify-start">
-              <div className="w-7 h-7 rounded-lg bg-brand-500 text-white flex items-center justify-center flex-shrink-0">
-                <Bot className="w-4 h-4 animate-spin" />
+            <div className="flex gap-2 sm:gap-3 justify-start">
+              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-brand-500 text-white flex items-center justify-center flex-shrink-0">
+                <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
               </div>
-              <div className="glass-panel px-4 py-3 rounded-2xl rounded-bl-none text-xs text-slate-400 flex items-center gap-2">
+              <div className="glass-panel px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl rounded-bl-none text-xs text-slate-400 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-brand-500 animate-ping" />
                 {t.followUpThinking}
               </div>
@@ -210,19 +210,19 @@ export const CardFollowUpChat: React.FC<CardFollowUpChatProps> = ({
         {/* Input box */}
         <form
           onSubmit={handleSend}
-          className="p-3 sm:p-4 border-t border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 flex items-center gap-2"
+          className="p-3 sm:p-4 border-t border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/90 flex items-center gap-2"
         >
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={t.followUpPlaceholder}
-            className="flex-1 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-2.5 text-xs sm:text-sm outline-none focus:border-brand-500 transition-colors"
+            className="flex-1 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm outline-none focus:border-brand-500 transition-colors"
           />
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="p-2.5 rounded-2xl bg-brand-600 hover:bg-brand-500 text-white disabled:opacity-40 transition-all shadow-md shadow-brand-500/20"
+            className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-brand-600 hover:bg-brand-500 text-white disabled:opacity-40 transition-all shadow-md shadow-brand-500/20 shrink-0"
           >
             <Send className="w-4 h-4" />
           </button>

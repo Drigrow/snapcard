@@ -58,16 +58,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-      <div className="glass-panel w-full max-w-lg rounded-3xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col">
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fade-in">
+      <div className="glass-panel w-full max-w-lg rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[92vh]">
         
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-200/80 dark:border-slate-800/80 mb-5">
+        <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-200/80 dark:border-slate-800/80 mb-4 sm:mb-5">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-brand-500/10 text-brand-500 flex items-center justify-center">
               <Key className="w-4 h-4" />
             </div>
-            <h3 className="font-bold text-base text-slate-900 dark:text-white">
+            <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
               {t.settingsTitle}
             </h3>
           </div>
@@ -79,8 +79,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </button>
         </div>
 
-        {/* Content Form */}
-        <div className="space-y-4 text-xs sm:text-sm">
+        {/* Content Form (Scrollable) */}
+        <div className="space-y-3.5 sm:space-y-4 text-xs sm:text-sm overflow-y-auto pr-1">
           
           {/* OpenRouter Key */}
           <div>
@@ -92,13 +92,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               value={openRouterKey}
               onChange={(e) => setOpenRouterKey(e.target.value)}
               placeholder="sk-or-v1-..."
-              className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 outline-none focus:border-brand-500 font-mono text-xs transition-colors"
+              className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 sm:py-2.5 outline-none focus:border-brand-500 font-mono text-xs transition-colors"
             />
-            <p className="text-[11px] text-slate-400 mt-1">{t.openRouterKeyDesc}</p>
+            <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1">{t.openRouterKeyDesc}</p>
           </div>
 
-          {/* Model Selector */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* Model Selector (1 col on mobile, 2 col on tablet/desktop) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-slate-800 dark:text-slate-200 mb-1">
                 {t.modelLabel}

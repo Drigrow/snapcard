@@ -49,20 +49,20 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in">
-      <div className="glass-panel w-full max-w-md rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col">
+    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-fade-in">
+      <div className="glass-panel w-full max-w-md rounded-2xl sm:rounded-3xl p-4 sm:p-7 shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[92vh] overflow-y-auto">
         
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-200/80 dark:border-slate-800/80 mb-5">
+        <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-200/80 dark:border-slate-800/80 mb-4 sm:mb-5">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 text-white flex items-center justify-center shadow-md">
-              <ShieldCheck className="w-5 h-5" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 text-white flex items-center justify-center shadow-md">
+              <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base text-slate-900 dark:text-white">
+              <h3 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white">
                 {t.loginModalTitle}
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-[11px] sm:text-xs text-slate-500">
                 {t.loginModalDesc}
               </p>
             </div>
@@ -84,7 +84,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         )}
 
         {/* Form */}
-        <form onSubmit={handleLogin} className="space-y-4 text-xs sm:text-sm">
+        <form onSubmit={handleLogin} className="space-y-3.5 sm:space-y-4 text-xs sm:text-sm">
           
           {/* Username */}
           <div>
@@ -98,7 +98,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="admin"
-                className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 outline-none focus:border-brand-500 transition-colors"
+                className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2 sm:py-2.5 outline-none focus:border-brand-500 transition-colors"
                 required
               />
             </div>
@@ -116,7 +116,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 outline-none focus:border-brand-500 transition-colors"
+                className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2 sm:py-2.5 outline-none focus:border-brand-500 transition-colors"
                 required
               />
             </div>
@@ -131,7 +131,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               <Clock className="w-3.5 h-3.5 text-brand-500" />
               <span>{t.loginTtlLabel}</span>
             </label>
-            <div className="grid grid-cols-4 gap-2 text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
               {[
                 { days: 7, label: t.loginTtl7d },
                 { days: 30, label: t.loginTtl30d },

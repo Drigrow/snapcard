@@ -11,7 +11,7 @@ import { LoginModal } from './components/LoginModal';
 import { CardRecord, PipelineStatus, AppSettings, AudienceTier, AuthState } from './types';
 import { ApiService } from './services/api';
 import { Language, getTranslation } from './utils/i18n';
-import { Sparkles, AlertCircle, LogIn, Lock } from 'lucide-react';
+import { Sparkles, AlertCircle, LogIn, Lock, BookOpen } from 'lucide-react';
 
 const DEFAULT_SETTINGS: AppSettings = {
   openRouterKey: '',
@@ -247,7 +247,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main View Area */}
-      <main className="flex-1 pb-16">
+      <main className="flex-1 pb-24 md:pb-16">
         
         {/* Error Alert */}
         {errorMessage && (
@@ -286,7 +286,7 @@ export const App: React.FC = () => {
               </div>
               <button
                 onClick={() => setIsLoginOpen(true)}
-                className="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-md shadow-brand-500/20 whitespace-nowrap"
+                className="w-full sm:w-auto justify-center px-4 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-medium text-xs flex items-center gap-1.5 shadow-md shadow-brand-500/20 whitespace-nowrap"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 <span>{t.adminSignIn}</span>
@@ -297,15 +297,15 @@ export const App: React.FC = () => {
 
         {/* View 1: Home / Generator */}
         {activeView === 'home' && (
-          <div className="space-y-6 pt-4 sm:pt-8">
+          <div className="space-y-6 pt-3 sm:pt-8">
             
             {/* Hero Title & Subtitle */}
             <div className="text-center px-4 max-w-3xl mx-auto">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20 text-xs font-semibold mb-3">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20 text-xs font-semibold mb-2 sm:mb-3">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{t.appTitle}</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-3">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight mb-2 sm:mb-3">
                 <span className="bg-gradient-to-r from-slate-900 via-brand-700 to-indigo-600 dark:from-white dark:via-brand-300 dark:to-indigo-200 bg-clip-text text-transparent">
                   {lang === 'zh' ? '秒级提炼，知识立现' : 'Instant Visual Knowledge'}
                 </span>
@@ -385,6 +385,42 @@ export const App: React.FC = () => {
       <footer className="py-6 border-t border-slate-200/80 dark:border-slate-800/80 text-center text-xs text-slate-400">
         <p>SnapCard · Powered by Gemini 3.7 Flash & Tavily Search · Client-side SVG Mermaid</p>
       </footer>
+
+      {/* Mobile Bottom Navigation Dock (Native App UX) */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-t border-slate-200/80 dark:border-slate-800/80 px-6 py-2 flex items-center justify-around shadow-2xl safe-area-pb">
+        <button
+          onClick={() => setActiveView('home')}
+          className={`flex flex-col items-center gap-1 py-1 px-4 rounded-xl transition-all ${
+            activeView === 'home'
+              ? 'text-brand-600 dark:text-brand-400 font-semibold'
+              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <div className={`p-1 rounded-lg ${activeView === 'home' ? 'bg-brand-500/10' : ''}`}>
+            <Sparkles className="w-5 h-5" />
+          </div>
+          <span className="text-[11px]">{isAdmin ? t.navCreate : t.navExplore}</span>
+        </button>
+
+        <button
+          onClick={() => setActiveView('archive')}
+          className={`flex flex-col items-center gap-1 py-1 px-4 rounded-xl transition-all relative ${
+            activeView === 'archive'
+              ? 'text-brand-600 dark:text-brand-400 font-semibold'
+              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <div className={`p-1 rounded-lg ${activeView === 'archive' ? 'bg-brand-500/10' : ''} relative`}>
+            <BookOpen className="w-5 h-5" />
+            {cardCount > 0 && (
+              <span className="absolute -top-1 -right-2 px-1.5 py-0.2 text-[9px] font-bold rounded-full bg-brand-500 text-white min-w-[16px] text-center">
+                {cardCount}
+              </span>
+            )}
+          </div>
+          <span className="text-[11px]">{t.archiveTitle}</span>
+        </button>
+      </nav>
 
       {/* In-Card Follow-up Q&A Drawer (Admin only) */}
       <CardFollowUpChat

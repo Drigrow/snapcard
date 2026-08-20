@@ -223,6 +223,9 @@ ${audienceInstruction}
 ${factsContext}
 
 LANGUAGE RULE: Output language MUST strictly match the language of user's query (e.g. if Chinese, output Simplified Chinese; if English, output English).
+MARKDOWN FORMATTING RULES:
+- When writing bold text, NEVER put spaces or linebreaks immediately inside the asterisks (write \`**bold text**\`, NOT \`** bold **\` or \`**bold **\`).
+- When writing bullet lists, every item MUST be on its own line starting with \`- \`.
 
 JSON Output Schema:
 {
@@ -275,6 +278,36 @@ JSON Output Schema:
       }
     }
 
+    // Preprocess markdown content
+    let rawContent = cardData.content || '';
+    rawContent = rawContent
+      .replace(/＊＊/g, '**')
+      .replace(/～～/g, '~~')
+      .replace(/｀｀｀/g, '```')
+      .replace(/｀/g, '`')
+      .replace(/([：:])\s*-(?=[^\s\d])/g, '$1\n- ')
+      .replace(/([。；])\s*-([^\s\d])/g, '$1\n- $2')
+      .replace(/(^|\n)[ \t]*[•·⁃][ \t]+/g, '$1- ');
+
+    // Normalize code block splitting
+    const parts = rawContent.split(/(```[\s\S]*?```)/g);
+    rawContent = parts
+      .map((part, index) => {
+        if (index % 2 === 1) return part;
+        let p = part;
+        // Trim inner whitespace within ** ... ** on the same line
+        p = p.replace(/\*\*([^\n*]+?)\*\*/g, (match, inner) => {
+          const trimmed = inner.trim();
+          if (!trimmed) return '';
+          return `**${trimmed}**`;
+        });
+        // Ensure bold markers have boundary spaces
+        p = p.replace(/([^\s*`_#>\-\d([])(\*\*[^\n*]+?\*\*)/g, '$1 $2');
+        p = p.replace(/(\*\*[^\n*]+?\*\*)([^\s*`_#<:\d])/g, '$1 $2');
+        return p;
+      })
+      .join('');
+
     const cardId = `card_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
 
     const newCard = CardDB.create({
@@ -282,7 +315,7 @@ JSON Output Schema:
       title: (cardData.title || query).slice(0, 20),
       oneLiner: cardData.oneLiner || '',
       audience,
-      content: cardData.content || '',
+      content: rawContent,
       diagram: cardData.diagram || null,
       images: finalImages,
       tags: Array.isArray(cardData.tags) ? cardData.tags : ['知识卡片'],

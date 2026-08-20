@@ -57,6 +57,18 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .safe-area-pb {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
 }
 
 /* Markdown typography enhancements */
@@ -127,9 +139,34 @@
 
 .markdown-body strong {
   font-weight: 700;
-  color: #38a9f8;
+  color: inherit;
 }
 
 .dark .markdown-body strong {
-  color: #7cc7fb;
+  color: inherit;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.markdown-body th,
+.markdown-body td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.markdown-body th {
+  background: rgba(148, 163, 184, 0.1);
+  font-weight: 600;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
 }
